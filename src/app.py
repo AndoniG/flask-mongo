@@ -13,8 +13,8 @@ mongo = PyMongo(app)
 @app.route('/users', methods=['POST'])
 def create_user():
     username = request.json['username']
-    password = request.json['password']
     email = request.json['email']
+    password = request.json['password']
 
     if username and password and email:
         hashed_password = generate_password_hash(password)
@@ -55,8 +55,24 @@ def get_user(id):
 @app.route('/users/<id>', methods=['DELETE'])
 def delete_user(id):
     mongo.db.users.delete_one({"_id": ObjectId(id)})
-    response = jsonify({"message": "User " + id + "was deleted."})
+    response = jsonify({"message": "User " + id + " was deleted."})
     return response
+
+
+@app.route('/users/<id>', methods=['PUT'])
+def update_user(id):
+    username = request.json['username']
+    email = request.json['email']
+    password = request.json['password']
+    if username and password and email:
+        hashed_password = generate_password_hash(password)
+        mongo.db.users.update_one({'_id': ObjectId(id)}, {"$set": {
+            'username': username,
+            'password': hashed_password,
+            "email": email
+        }})
+        response = jsonify({"message": "User " + id + " was updated."})
+        return response
 
 
 @app.errorhandler(404)
