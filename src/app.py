@@ -52,6 +52,13 @@ def get_user(id):
     return Response(response, mimetype='application/json')
 
 
+@app.route('/users/<id>', methods=['DELETE'])
+def delete_user(id):
+    mongo.db.users.delete_one({"_id": ObjectId(id)})
+    response = jsonify({"message": "User " + id + "was deleted."})
+    return response
+
+
 @app.errorhandler(404)
 def not_found(error=None):
     response = jsonify(
