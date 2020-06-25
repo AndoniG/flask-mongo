@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_pymongo import PyMongo
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -29,9 +29,22 @@ def create_user():
         }
         return response
     else:
-        print('error')
+        return not_found()
 
     return {'message': 'received'}
+
+
+@app.errorhandler(404)
+def not_found(error=None):
+    response = jsonify(
+        {
+            "message": "Resource not found: " + request.url,
+            "status": 404
+        }
+    )
+    # Asignamos el status a la respuesta. Por defecto Flask envía 200
+    response.status_code = 404
+    return response
 
 
 if __name__ == "__main__":
