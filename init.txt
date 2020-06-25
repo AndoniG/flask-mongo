@@ -1,0 +1,4 @@
+1.- Ejecutar entorno virtual (cada proyecto tiene su propio entorno) - pip install virtualenv
+2.- Asignar nombre al entorno - virtualenv flask-mongo
+3.- Ejecutar el entorno - .\flask-mongo\Scripts\activate.bat
+4.- Instalar módulos esenciales - pip install flask pymongo flask-pymongo
