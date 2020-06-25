@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, Response
 from flask_pymongo import PyMongo
 from werkzeug.security import generate_password_hash, check_password_hash
 from bson import json_util
+from bson.objectid import ObjectId
 
 # Flask server created and mongo connection string configured in App
 app = Flask(__name__)
@@ -41,6 +42,13 @@ def get_users():
     # .dumps returna un json a partir de un bson
     response = json_util.dumps(users)
     # Flask regresa string, por lo que especificamos el tipo de dato a enviar
+    return Response(response, mimetype='application/json')
+
+
+@app.route('/users/<id>', methods=['GET'])
+def get_user(id):
+    user = mongo.db.users.find_one({'_id': ObjectId(id)})
+    response = json_util.dumps(user)
     return Response(response, mimetype='application/json')
 
 
